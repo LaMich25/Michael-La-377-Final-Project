@@ -4,25 +4,42 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Michael's Project</title>
+    <title>INST377 Final Michael La</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div>
-        <header>
-            <h1>Ghibli Films</h1>
+    <div class="wrapper">
+        <header class="header">
+            <h1>Michael INST 377 Final</h1>
         </header>
+        <div class="container">
+            <div class="left_section box">
+                <h3>Form inputs</h3>
+                <form action="https://api.umd.io/v1/courses/sections?per_page=100" class="box main_form">
+                    <button type="button" id = "data_load">Load Data</button>
+                    <label for="resto"></label>
+                    Class Name
+                    <input type="text" id="resto" name="resto">
+
+                    <button type="button" id = "generate">Generate List</button>
+                   
+                </form>
+            </div>
+            <div class="right_section box">
+                <h3>Classes at UMD</h3>
+                <ol class="restaurant_list box", id = "restaurant_list">
+                    List of Classes
+                </ol>
+                <div class = "lds-ellipsis" id = "data_load_animation"><div></div><div></div><div></div></div>
+            </div>
+        </div>
+        <footer class="footer">LaMich25 <a href="https://github.com/LaMich25/INST377-Lab-Work" target="_blank"
+                rel="noopener noreferrer">Michael's
+                Github</a></footer>
     </div>
 
-    <h2>Movie Posters</h2>
-    <div>
-        <img src="images/fireflies.jpg" alt="fireflies">
-        <img src="images/ponyo.jpg" alt="ponyo">
-        <img src="images/spirited_away.jpg" alt="spirited_away">
-        <img src="images/totoro.jpg" alt="totoro">
-    </div>
+    <script src="./script.js"></script>
 </body>
-
-
 
 </html>
