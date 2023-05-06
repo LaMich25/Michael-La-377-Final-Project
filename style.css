@@ -407,6 +407,9 @@ form label {
     align-items: flex-start;
   }
 
-  /*test*/
+  .chart_container{
+    height: 100%;
+    width: 100%;
+  }
 
 }

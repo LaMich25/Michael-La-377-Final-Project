@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INST377 Final Michael La</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -17,21 +18,32 @@
             <div class="left_section box">
                 <h3>Form inputs</h3>
                 <form action="https://api.umd.io/v1/courses/sections?per_page=100" class="box main_form">
-                    <button type="button" id = "data_load">Load Data</button>
+                    <button type="button" id="data_load">Load Data</button>
+                    <button type="button" id = "data_clear">Clear Data</button>
                     <label for="resto"></label>
                     Class Name
                     <input type="text" id="resto" name="resto">
 
-                    <button type="button" id = "generate">Generate List</button>
-                   
+                    <button type="button" id="generate">Generate List</button>
+
                 </form>
+
             </div>
             <div class="right_section box">
                 <h3>Classes at UMD</h3>
-                <ol class="restaurant_list box", id = "restaurant_list">
+
+                <div class="chart_container">
+                    <canvas id="myChart"></canvas>
+                </div>
+
+                <ol class="restaurant_list box" , id="restaurant_list">
                     List of Classes
                 </ol>
-                <div class = "lds-ellipsis" id = "data_load_animation"><div></div><div></div><div></div></div>
+                <div class="lds-ellipsis" id="data_load_animation">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
             </div>
         </div>
         <footer class="footer">LaMich25 <a href="https://github.com/LaMich25/INST377-Lab-Work" target="_blank"
