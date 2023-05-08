@@ -1,7 +1,4 @@
-/*
-  Hook this script to index.html
-  by adding `<script src="script.js">` just before your closing `</body>` tag
-*/
+
 
 /* A quick filter that will return something based on a matching input */
 function filterList(list, query) {
@@ -10,13 +7,7 @@ function filterList(list, query) {
         const lowerCaseQuery = query.toLowerCase();
         return lowerCaseName.includes(lowerCaseQuery);
     })
-    /*
-      Using the .filter array method, 
-      return a list that is filtered by comparing the item name in lower case
-      to the query in lower case
   
-      Ask the TAs if you need help with this
-    */
 }
 
 function getRandomIntInclusive(min, max) {
@@ -34,7 +25,7 @@ function injectHTML(list) {
     });
 }
 
-function cutRestaurantList(list) {
+function cutList(list) {
     console.log('fired cut list');
     const range = [...Array(15).keys()];
     return newArray = range.map((item) => {
@@ -44,41 +35,66 @@ function cutRestaurantList(list) {
 
 }
 
-function initChart(chart){
+function initChart(chart, object){
 
-    new Chart(chart, {
-      type: 'bar',
-      data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    const labels = Object.keys(object);
+    const info = Object.keys(object).map((item) => object[item].length);
+    
+      const data = {
+        labels: labels,
         datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
-          borderWidth: 1
+          label: 'Classes by Course Name',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
+          data: info,
         }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
-    });
+      };
+    
+      const config = {
+        type: 'bar',
+        data: data,
+        options: {}
+      };
       
+      return new Chart(
+        chart,
+        config
+      );
   
 }
 
 
 
-function shapedData(array){
+function shapeData(array){
     return array.reduce((collection, item) => {
-        if(!collection[item.category]){
-            collection[item.category] = [item]
+        if(!collection[item.course]){
+            collection[item.course] = [item]
         }else{
-            collection[item.category].push(item);
+            collection[item.course].push(item);
         }
         return collection;
     }, {})
+}
+
+async function getData()
+{
+    const results  = await fetch('https://api.umd.io/v1/courses/sections?per_page=100');
+    const barData = await results.json();
+    console.log(barData);
+    return barData;
+}
+
+
+
+function changeChart(chart, dataObject){
+    const labels = Object.keys(dataObject);
+    const info = Object.keys(dataObject).map((item) => dataObject[item].length);
+    chart.data.labels = labels;
+    chart.data.datasets.forEach((set) => {
+        set.data = info;
+        return set;
+    })
+    chart.update();
 }
 
 async function mainEvent() { // the async keyword means we can make API requests
@@ -86,7 +102,7 @@ async function mainEvent() { // the async keyword means we can make API requests
     // Add a querySelector that targets your filter button here
     const loadDataButton = document.querySelector('#data_load');
     const generateListButton = document.querySelector('#generate');
-    const textField = document.querySelector('#resto');
+    const textField = document.querySelector('#class');
     const chartTarget = document.querySelector('#myChart');
     const loadAnimation = document.querySelector('#data_load_animation');
     const clearDataButton = document.querySelector('#data_clear');
@@ -107,6 +123,7 @@ async function mainEvent() { // the async keyword means we can make API requests
 
     /* We need to listen to an "event" to have something happen in our page - here we're listening for a "submit" */
     
+    const list = [];
 
 
     loadDataButton.addEventListener('click', async (event) => {
@@ -116,13 +133,8 @@ async function mainEvent() { // the async keyword means we can make API requests
         const results = await fetch('https://api.umd.io/v1/courses/sections?per_page=100');
         const storedList = await results.json();
 
-        initChart(chartTarget);
-        /*
-        const chartData = await results.json();
-        const shapeData = shapedData(chartData);
-        console.log(shapedData);
-        const myChart = initChart(chartTarget, shapedData);
-        */
+        
+        
         localStorage.setItem('storedData', JSON.stringify(storedList));
         parsedData = storedList;
 
@@ -133,16 +145,26 @@ async function mainEvent() { // the async keyword means we can make API requests
 
         loadAnimation.style.display = 'none';
         console.table(storedList);
+        
+        
     })
 
+    const chartData = list;
+    const shapedData = shapeData(chartData);
+    console.log(shapedData);
+    const myChart = initChart(chartTarget, shapedData);
  
 
 
     generateListButton.addEventListener('click', (event) => {
         console.log('generate new list');
-        currentList = cutRestaurantList(parsedData);
+        currentList = cutList(parsedData);
         console.log(currentList);
         injectHTML(currentList);
+        
+        const localData = shapeData(currentList);
+        console.log(localData);
+        changeChart(myChart, localData);
        
     })
 
@@ -151,6 +173,9 @@ async function mainEvent() { // the async keyword means we can make API requests
         const newList = filterList(currentList, event.target.value);
         console.log(newList);
         injectHTML(newList);
+        const localData = shapeData(newList);
+        console.log(localData);
+        changeChart(myChart, localData);
     })
 
     clearDataButton.addEventListener("click", (event) => {
