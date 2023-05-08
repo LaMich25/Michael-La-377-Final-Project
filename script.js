@@ -3,7 +3,7 @@
 /* A quick filter that will return something based on a matching input */
 function filterList(list, query) {
     return list.filter((item) => {
-        const lowerCaseName = item.course.toLowerCase();
+        const lowerCaseName = item.course_id.toLowerCase();
         const lowerCaseQuery = query.toLowerCase();
         return lowerCaseName.includes(lowerCaseQuery);
     })
@@ -20,7 +20,7 @@ function injectHTML(list) {
     const target = document.querySelector('#restaurant_list');
     target.innerHTML = '';
     list.forEach((item) => {
-        const str = `<li>${item.course}</li>`;
+        const str = `<li>${item.course_id}</li>`;
         target.innerHTML += str
     });
 }
@@ -43,7 +43,7 @@ function initChart(chart, object){
       const data = {
         labels: labels,
         datasets: [{
-          label: 'Classes by Course Name',
+          label: 'Classes by Department ID',
           backgroundColor: 'rgb(255, 99, 132)',
           borderColor: 'rgb(255, 99, 132)',
           data: info,
@@ -67,10 +67,10 @@ function initChart(chart, object){
 
 function shapeData(array){
     return array.reduce((collection, item) => {
-        if(!collection[item.course]){
-            collection[item.course] = [item]
+        if(!collection[item.dept_id]){
+            collection[item.dept_id] = [item]
         }else{
-            collection[item.course].push(item);
+            collection[item.dept_id].push(item);
         }
         return collection;
     }, {})
@@ -130,8 +130,9 @@ async function mainEvent() { // the async keyword means we can make API requests
 
         console.log('Loading data');
         loadAnimation.style.display = 'inline-block'
-        const results = await fetch('https://api.umd.io/v1/courses/sections?per_page=100');
+        const results = await fetch('https://api.umd.io/v1/courses?per_page=100');
         const storedList = await results.json();
+        console.log(storedList);
 
         
         
